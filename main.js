@@ -1,27 +1,27 @@
 /* =========================================================
-   Subnet Summer — site behaviour
+   Subnet Summer — site behaviour (v2)
    ========================================================= */
 document.documentElement.classList.add('js');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------------------------------------------------------
    CONTENT YOU EDIT
-   Add post links to each client's `posts` array, e.g.
-   posts: ['https://x.com/SubnetSummerT/status/123...', ...]
+   posts: add links, e.g. 'https://x.com/SubnetSummerT/status/123...'
    X/Twitter links render as embedded posts; other links render as link cards.
+   logo: white-on-transparent mark in /assets (null = name only).
    --------------------------------------------------------- */
 const CLIENTS = [
-  { name: '404-GEN',  tags: ['Visuals', 'Branding', 'Creative'], variant: 'yellow',  size: 'lg', posts: [] },
-  { name: 'Trishool', tags: ['Visuals', 'Branding', 'Creative'], variant: 'white',   size: 'lg', posts: [] },
-  { name: 'Verathos', tags: ['Visuals', 'Branding', 'Creative'], variant: 'outline', posts: [] },
-  { name: 'Numinous', tags: ['Visuals', 'Branding', 'Creative'], variant: 'yellow',  posts: [] },
-  { name: 'NIOME',    tags: ['Visuals', 'Branding', 'Creative'], variant: 'paper',   posts: [] },
+  { name: '404-GEN',  logo: 'assets/logo-404gen.png',   wide: true, tags: ['Visuals', 'Branding', 'Creative'], variant: 'dark',  size: 'lg', posts: [] },
+  { name: 'Trishool', logo: 'assets/logo-trishool.svg',             tags: ['Visuals', 'Branding', 'Creative'], variant: 'light', size: 'lg', posts: [] },
+  { name: 'Verathos', logo: null,                                   tags: ['Visuals', 'Branding', 'Creative'], variant: 'light',             posts: [] },
+  { name: 'Numinous', logo: 'assets/logo-numinous.png',             tags: ['Visuals', 'Branding', 'Creative'], variant: 'dark',              posts: [] },
+  { name: 'NIOME',    logo: 'assets/logo-niome.png',                tags: ['Visuals', 'Branding', 'Creative'], variant: 'light',             posts: [] },
 ];
 
 const TESTIMONIALS = [
   { quote: 'Client testimonial goes here. One or two lines on how Subnet Summer changed their visibility.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
   { quote: 'Second testimonial placeholder. A short line on community growth, Spaces or campaign results.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
-  { quote: 'Third testimonial placeholder. Keep it to a punchy sentence or two for the best layout.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
+  { quote: 'Third testimonial placeholder. Keep it to a sentence or two so the three cards stay balanced.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
 ];
 
 /* ---------- helpers ---------- */
@@ -30,6 +30,18 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const pad = n => String(n).padStart(2, '0');
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const logoImg = (c, cls = '') => c.logo ? `<img src="${c.logo}" alt="" class="${[c.wide ? 'wide' : '', cls].join(' ').trim()}">` : '';
+
+/* =========================================================
+   CLIENT LOGO MARQUEE (moves left → right, loops)
+   ========================================================= */
+(function buildMarquee() {
+  const track = $('#logoTrack');
+  const set = CLIENTS.map(c => `<div class="logo-item">${logoImg(c)}<span>${esc(c.name)}</span></div><i class="logo-sep"></i>`).join('');
+  const half = set + set;             // one half wide enough for large screens
+  track.innerHTML = half + half;      // two identical halves → seamless loop
+  $$('.logo-item', track).slice(CLIENTS.length * 2).forEach(el => el.setAttribute('aria-hidden', 'true'));
+})();
 
 /* =========================================================
    WORK CARDS
@@ -47,7 +59,7 @@ CLIENTS.forEach((c, i) => {
   card.innerHTML = `
     <div class="wmedia">
       <div class="wmeta"><span>${pad(i + 1)} / ${pad(CLIENTS.length)}</span><span>${n ? `${n} post${n > 1 ? 's' : ''}` : 'Posts coming soon'}</span></div>
-      <div class="wname">${esc(c.name)}</div>
+      <div class="wlogo">${logoImg(c)}<span class="wname">${esc(c.name)}</span></div>
       <div class="wtiles">${tile}${tile}${tile}</div>
     </div>
     <div class="winfo"><h3>${esc(c.name)}</h3><p>${c.tags.map(esc).join(' / ')}</p><span class="wlink">View posts ↗</span></div>`;
@@ -94,37 +106,22 @@ function openModal(i) {
 function closeModal() {
   modal.classList.remove('open');
   document.body.style.overflow = '';
-  setTimeout(() => { modal.hidden = true; lastFocus && lastFocus.focus(); }, 560);
+  setTimeout(() => { modal.hidden = true; lastFocus && lastFocus.focus(); }, 620);
 }
 modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal(); });
 
 /* =========================================================
-   TESTIMONIALS
+   TESTIMONIALS — all three in one row
    ========================================================= */
-const qWrap = $('#quotes');
-qWrap.innerHTML = TESTIMONIALS.map((t, i) => `
-  <figure class="quote${i === 0 ? ' on' : ''}" aria-hidden="${i !== 0}">
-    <blockquote>${esc(t.quote)}</blockquote>
+const QMARK = '<svg class="qmark" viewBox="0 0 120 90" aria-hidden="true"><path d="M0 90V52C0 22 15 5 45 0l5 12C33 17 26 28 25 42h22v48H0Zm68 0V52C68 22 83 5 113 0l5 12c-17 5-24 16-25 30h22v48H68Z"/></svg>';
+$('#tGrid').innerHTML = TESTIMONIALS.map(t => `
+  <figure class="t-card" data-reveal>
+    <div>${QMARK}<blockquote>${esc(t.quote)}</blockquote></div>
     <figcaption class="who">
       <span class="who-av">${esc(t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase())}</span>
       <div><b>${esc(t.name)}${t.placeholder ? '<span class="ph-pill">Placeholder</span>' : ''}</b><span class="who-role">${esc(t.role)}</span></div>
     </figcaption>
-  </figure>`).join('') +
-  `<div class="t-dots">${TESTIMONIALS.map((_, i) => `<button aria-label="Show testimonial ${i + 1}"${i === 0 ? ' class="on"' : ''}></button>`).join('')}</div>`;
-let tIdx = 0, tTimer;
-function showQuote(i) {
-  tIdx = (i + TESTIMONIALS.length) % TESTIMONIALS.length;
-  $$('.quote', qWrap).forEach((q, k) => { q.classList.toggle('on', k === tIdx); q.setAttribute('aria-hidden', k !== tIdx); });
-  $$('.t-dots button', qWrap).forEach((d, k) => d.classList.toggle('on', k === tIdx));
-  $('#tCount').textContent = `${pad(tIdx + 1)} / ${pad(TESTIMONIALS.length)}`;
-}
-const autoQ = () => { clearInterval(tTimer); if (!reduce) tTimer = setInterval(() => showQuote(tIdx + 1), 7000); };
-$('#tPrev').onclick = () => { showQuote(tIdx - 1); autoQ(); };
-$('#tNext').onclick = () => { showQuote(tIdx + 1); autoQ(); };
-$$('.t-dots button', qWrap).forEach((d, k) => d.onclick = () => { showQuote(k); autoQ(); });
-$('#testimonials').addEventListener('mouseenter', () => clearInterval(tTimer));
-$('#testimonials').addEventListener('mouseleave', autoQ);
-autoQ();
+  </figure>`).join('');
 
 /* =========================================================
    BILLING TOGGLE
@@ -138,7 +135,7 @@ $$('.billing button').forEach(b => b.addEventListener('click', () => {
   $$('.billing button').forEach(x => x.setAttribute('aria-selected', x === b));
   const d = BILL[b.dataset.bill], n = $('#priceN');
   n.classList.add('swap');
-  setTimeout(() => { n.textContent = d.n; $('#priceP').textContent = d.p; $('#priceNote').textContent = d.note; n.classList.remove('swap'); }, 220);
+  setTimeout(() => { n.textContent = d.n; $('#priceP').textContent = d.p; $('#priceNote').textContent = d.note; n.classList.remove('swap'); }, 240);
 }));
 
 /* =========================================================
@@ -146,16 +143,15 @@ $$('.billing button').forEach(b => b.addEventListener('click', () => {
    ========================================================= */
 const groups = new Map();
 $$('[data-reveal]').forEach(el => {
-  const p = el.parentElement;
-  const k = (groups.get(p) || 0);
+  const p = el.parentElement, k = groups.get(p) || 0;
   groups.set(p, k + 1);
-  el.style.transitionDelay = `${Math.min(k, 6) * 70}ms`;
+  el.style.transitionDelay = `${Math.min(k, 6) * 80}ms`;
 });
 function countUp(el) {
-  const to = +el.dataset.count, t0 = performance.now(), dur = 1600;
+  const to = +el.dataset.count, t0 = performance.now(), dur = 1800;
   const step = t => {
-    const p = clamp((t - t0) / dur), e = 1 - Math.pow(2, -10 * p);
-    el.textContent = Math.round(to * (p === 1 ? 1 : e)).toLocaleString('en-US');
+    const p = clamp((t - t0) / dur), e = 1 - Math.pow(1 - p, 4);
+    el.textContent = Math.round(to * e).toLocaleString('en-US');
     if (p < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -163,42 +159,58 @@ function countUp(el) {
 const io = new IntersectionObserver(entries => entries.forEach(en => {
   if (!en.isIntersecting) return;
   en.target.classList.add('in');
-  $$('[data-count]', en.target).forEach(c => !reduce && countUp(c));
+  if (!reduce) $$('[data-count]', en.target).forEach(countUp);
   io.unobserve(en.target);
-}), { threshold: 0.18, rootMargin: '0px 0px -6% 0px' });
+}), { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
 $$('[data-reveal]').forEach(el => io.observe(el));
 
 /* =========================================================
-   HERO — intro + scroll expansion
+   HERO — skyline line (from the Figma cover's stepped bars)
    ========================================================= */
-const hero = $('#hero');
-let base = { pl: 22, pt: 13, pr: 1.6, pb: 2.4 };
-function readBase() {
-  ['--pl', '--pt', '--pr', '--pb'].forEach(v => hero.style.removeProperty(v));
-  const cs = getComputedStyle(hero);
-  base = { pl: parseFloat(cs.getPropertyValue('--pl')), pt: parseFloat(cs.getPropertyValue('--pt')), pr: parseFloat(cs.getPropertyValue('--pr')), pb: parseFloat(cs.getPropertyValue('--pb')) };
-}
-let introDone = reduce;
-readBase();
-if (!reduce) {
-  hero.classList.add('pre');
-  const go = () => requestAnimationFrame(() => {
-    hero.classList.add('intro');
-    hero.classList.remove('pre');
-    setTimeout(() => { hero.classList.remove('intro'); introDone = true; onScroll(); }, 1550);
+const hero = $('#hero'), sky = $('#skyline');
+// Top-segment heights of the 16 columns on the Figma "Slide1" cover (of 1080).
+const STEPS = [675, 270, 945, 135, 810, 540, 476.7, 405, 160.9, 540, 810, 270, 675, 945, 405, 381.8];
+let skyPath = null, skyDot = null, skyLen = 0;
+function drawSkyline(animate) {
+  const W = hero.clientWidth, H = hero.clientHeight;
+  const headTop = $('.hero-h').getBoundingClientRect().top - hero.getBoundingClientRect().top;
+  const top = Math.max(118, H * 0.17);
+  const span = Math.max(60, Math.min(H * 0.34, headTop - top - 36));
+  const cw = W / STEPS.length;
+  let d = '';
+  STEPS.forEach((h, i) => {
+    const y = (top + (h / 1080) * span).toFixed(1);
+    d += i === 0 ? `M0 ${y} H${cw.toFixed(1)}` : ` V${y} H${((i + 1) * cw).toFixed(1)}`;
   });
-  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(go, 120));
+  sky.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  sky.innerHTML = `<path d="${d}"/><circle class="dot" r="4"/>`;
+  skyPath = $('path', sky); skyDot = $('.dot', sky);
+  skyLen = skyPath.getTotalLength();
+  if (animate && !reduce) {
+    skyPath.style.strokeDasharray = skyLen;
+    skyPath.style.strokeDashoffset = skyLen;
+    skyPath.getBoundingClientRect();
+    skyPath.style.transition = 'stroke-dashoffset 2.6s cubic-bezier(.22,.61,.36,1)';
+    skyPath.style.strokeDashoffset = 0;
+  }
+}
+let heroVisible = true, dotT0 = performance.now();
+new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(hero);
+function dotLoop(t) {
+  if (heroVisible && skyPath && skyLen) {
+    const p = ((t - dotT0) / 14000) % 1;          // one slow pass every 14s
+    const pt = skyPath.getPointAtLength(p * skyLen);
+    skyDot.setAttribute('cx', pt.x); skyDot.setAttribute('cy', pt.y);
+  }
+  requestAnimationFrame(dotLoop);
 }
 
-function heroScroll() {
-  if (!introDone) return;
-  const p = clamp(scrollY / (hero.offsetHeight * 0.9));
-  const e = p * p * (3 - 2 * p);
-  hero.style.setProperty('--pl', (base.pl * (1 - e)) + '%');
-  hero.style.setProperty('--pt', (base.pt * (1 - e)) + '%');
-  hero.style.setProperty('--pr', (base.pr * (1 - e)) + '%');
-  $('.hero-left').style.opacity = clamp(1 - p * 3.5);
-}
+if (!reduce) hero.classList.add('pre');
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => {
+  drawSkyline(true);
+  requestAnimationFrame(() => hero.classList.remove('pre'));
+  if (!reduce) setTimeout(() => { dotT0 = performance.now(); requestAnimationFrame(dotLoop); }, 2600);
+});
 
 /* =========================================================
    NAV / HUD THEME + DECK NAVIGATION
@@ -224,9 +236,8 @@ function currentIndex() {
 let ticking = false;
 function onScroll() {
   ticking = false;
-  heroScroll();
   nav.classList.toggle('is-scrolled', scrollY > 30);
-  nav.dataset.theme = themeAt(36);
+  nav.dataset.theme = themeAt(38);
   hud.dataset.theme = themeAt(innerHeight - 30);
   const i = currentIndex();
   $('#hudNum').textContent = pad(i + 1);
@@ -234,10 +245,11 @@ function onScroll() {
   const max = document.documentElement.scrollHeight - innerHeight;
   $('#hudBar').style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
   hud.classList.toggle('is-hidden', scrollY > max - 260);
-  $('.hud-hint').style.display = i === 0 && innerWidth > 860 ? '' : 'none';
+  $('.hud-hint').style.display = i === 0 ? '' : 'none';
 }
 addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-addEventListener('resize', () => { if (introDone) readBase(); fitWordmark(); onScroll(); });
+let rz;
+addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawSkyline(false); onScroll(); }, 120); });
 
 function goTo(i) {
   i = clamp(i, 0, sections.length - 1);
@@ -259,16 +271,4 @@ burger.addEventListener('click', () => {
 });
 $$('a', menu).forEach(a => a.addEventListener('click', () => { burger.setAttribute('aria-expanded', 'false'); menu.hidden = true; }));
 
-/* ---------- footer wordmark fit ---------- */
-function fitWordmark() {
-  const w = $('.wordmark'), p = w.parentElement, cs = getComputedStyle(p);
-  const avail = p.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-  w.style.fontSize = '100px';
-  w.style.width = 'max-content';
-  const need = w.offsetWidth;
-  w.style.width = '';
-  w.style.fontSize = Math.floor(100 * avail / need * 0.97) + 'px';
-}
-(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { fitWordmark(); onScroll(); });
-fitWordmark();
 onScroll();
