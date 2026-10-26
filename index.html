@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ss-wordmark" viewBox="0 0 423.463 46.9741"><g id="Vector">
@@ -31,69 +31,58 @@
 <path d="M422.156 11.7936C422.431 11.7936 422.655 11.8152 422.825 11.8575C423.08 11.8575 423.293 11.8791 423.463 11.9214V20.2923C423.249 20.2509 423.038 20.2077 422.825 20.1645C422.612 20.1645 422.379 20.1542 422.124 20.1326C421.869 20.1119 421.592 20.1006 421.294 20.1006C419.934 20.1006 418.68 20.3778 417.532 20.9283C416.385 21.4807 415.385 22.2981 414.535 23.3813C413.684 24.4646 413.025 25.7705 412.558 27.299C412.09 28.8276 411.857 30.5478 411.857 32.4587V45.5563H410.728C406.774 45.5563 403.568 42.3535 403.568 38.4029V12.7491H405.624C408.89 12.7491 411.537 15.3938 411.537 18.6566V19.3744C411.92 18.2705 412.419 17.2511 413.036 16.3163C413.652 15.3825 414.375 14.5867 415.203 13.9272C416.033 13.2696 416.957 12.7491 417.978 12.3667C418.998 11.9843 420.082 11.7936 421.229 11.7936H422.156Z" fill="currentColor"/>
 </g></symbol></svg>
 
-<div class="frame-lines" aria-hidden="true"></div>
-
-<!-- ============ NAV ============ -->
 <header class="nav" id="nav">
   <a href="#hero" class="brand" aria-label="Subnet Summer home"><svg class="ss-logo" viewBox="0 0 423.463 46.9741" role="img" aria-label="Subnet Summer"><use href="#ss-wordmark"/></svg></a>
   <nav class="nav-links" aria-label="Primary">
-    <a href="#work">Work</a>
-    <a href="#contact" class="btn btn--solid btn--sm">Contact us <b>↗</b></a>
+    <a href="#work" class="nav-link">Our work</a>
+    <a href="#contact" class="btn btn--solid btn--sm">Contact us</a>
   </nav>
 </header>
 
-<!-- ============ DECK HUD ============ -->
-<div class="hud" id="hud" aria-hidden="true">
-  <span class="hud-num" id="hudNum">01</span><span class="hud-tot">/ <span id="hudTotal">09</span></span>
-  <span class="hud-bar"><i id="hudBar"></i></span>
-  <span class="hud-label" id="hudLabel">Hello</span>
-</div>
-
-<main id="deck">
+<main>
 
 <!-- ============ HERO ============ -->
-<section class="sec hero" id="hero" data-theme="dark" data-label="Hello">
-  <svg class="skyline" id="skyline" aria-hidden="true"></svg>
+<section class="hero" id="hero">
   <div class="wrap hero-main">
     <h1 class="hero-h" data-split>Marketing and <em>growth</em><br class="br-lg"> for Bittensor subnets.</h1>
     <p class="hero-lede" data-reveal>You build the tech. We make sure the ecosystem notices. Narrative, content, X growth and community, run end-to-end by a team that lives in Bittensor.</p>
   </div>
   <div class="strip">
-    <p class="strip-label">Our clients</p>
+    <p class="strip-label wrap">Our clients</p>
     <div class="logo-marquee" aria-label="Clients">
       <div class="logo-track" id="logoTrack"></div>
     </div>
   </div>
 </section>
 
-<!-- ============ 01 PROBLEM ============ -->
-<section class="sec" id="problem" data-theme="light" data-label="The problem">
-  <div class="sec-head"><span class="sec-num">01</span><span class="sec-title">The problem</span><span class="sec-note">Why great subnets go unseen</span></div>
+<!-- ============ THE PROBLEM ============ -->
+<section class="sec sec--light" id="problem">
   <div class="wrap">
+    <p class="eyebrow" data-reveal>The problem</p>
     <h2 class="statement" data-split>Subnet teams are buried in the tech. <span class="soft">Marketing, comms and community get left for later.</span></h2>
 
     <ol class="stairs">
-      <li data-reveal style="--i:0"><span class="st-n">01</span><span class="st-h">Visibility drops.</span><span class="st-d">No steady presence on X, in Spaces or in the community.</span></li>
-      <li data-reveal style="--i:1"><span class="st-n">02</span><span class="st-h">Mindshare slips.</span><span class="st-d">Teams that show up every day take the attention you earned.</span></li>
-      <li data-reveal style="--i:2"><span class="st-n">03</span><span class="st-h">Confidence fades.</span><span class="st-d">Investors back what they can see. Silence reads as risk.</span></li>
-      <li data-reveal style="--i:3"><span class="st-n">04</span><span class="st-h y">Alpha suffers.</span><span class="st-d">Less attention means less funding and a weaker alpha price.</span></li>
+      <li data-reveal style="--i:0"><span class="st-h">Visibility drops.</span><span class="st-d">No steady presence on X, in Spaces or in the community.</span></li>
+      <li data-reveal style="--i:1"><span class="st-h">Mindshare slips.</span><span class="st-d">Teams that show up every day take the attention you earned.</span></li>
+      <li data-reveal style="--i:2"><span class="st-h">Confidence fades.</span><span class="st-d">Investors back what they can see. Silence reads as risk.</span></li>
+      <li data-reveal style="--i:3"><span class="st-h y">Alpha suffers.</span><span class="st-d">Less attention means less funding and a weaker alpha price.</span></li>
     </ol>
 
     <p class="kicker" data-split>Brilliant ideas go unnoticed. Great tech gets <em>overlooked.</em></p>
   </div>
 </section>
 
-<!-- ============ 02 WHY NOW ============ -->
-<section class="sec" id="why-now" data-theme="dark" data-label="Why now">
-  <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">Why now</span><span class="sec-note">The cost of waiting</span></div>
+<!-- ============ WHY NOW ============ -->
+<section class="sec" id="why-now">
   <div class="wrap why">
     <div class="why-copy">
+      <p class="eyebrow" data-reveal>Why now</p>
       <h2 class="display" data-split>Mindshare compounds. <em>So does silence.</em></h2>
-      <ol class="points">
-        <li data-reveal><span class="pt-n">01</span><div><h3>Alpha follows attention</h3><p>Price is tied directly to visibility, marketing and community strength.</p></div></li>
-        <li data-reveal><span class="pt-n">02</span><div><h3>Early movers keep winning</h3><p>The subnets that show up consistently are the ones taking the mindshare.</p></div></li>
-        <li data-reveal><span class="pt-n">03</span><div><h3>Waiting has a cost</h3><p>Every quiet month costs you investors, miners and momentum.</p></div></li>
-      </ol>
+      <div class="points">
+        <div class="point" data-reveal><h3>Alpha follows attention</h3><p>Price is tied directly to visibility, marketing and community strength.</p></div>
+        <div class="point" data-reveal><h3>Early movers keep winning</h3><p>The subnets that show up consistently are the ones taking the mindshare.</p></div>
+        <div class="point" data-reveal><h3>Waiting has a cost</h3><p>Every quiet month costs you investors, miners and momentum.</p></div>
+      </div>
     </div>
     <figure class="chart" data-reveal aria-label="Illustration: mindshare rises for subnets that show up consistently and falls for subnets that go quiet">
       <svg viewBox="0 0 640 460" class="chart-svg">
@@ -116,59 +105,40 @@
   </div>
 </section>
 
-<!-- ============ 03 WHO WE ARE ============ -->
-<section class="sec" id="about" data-theme="light" data-label="Who we are">
-  <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Who we are</span><span class="sec-note">Team and credibility</span></div>
+<!-- ============ WHO WE ARE ============ -->
+<section class="sec sec--light" id="about">
   <div class="wrap">
+    <p class="eyebrow" data-reveal>Who we are</p>
     <h2 class="statement" data-split>We know Bittensor. <span class="soft">We know what moves the needle.</span></h2>
 
     <div class="stats">
-      <div class="stat" data-reveal><div class="stat-n"><span data-count="2700">2,700</span><em>+</em></div><p><b>X followers</b> grown in just a few months</p></div>
-      <div class="stat" data-reveal><div class="stat-n"><span data-count="800">800</span><em>+</em></div><p><b>Live listeners</b> on our very first X Space</p></div>
-      <div class="stat" data-reveal><div class="stat-n"><span data-count="2600">2,600</span></div><p><b>Active members</b> in the largest Bittensor community on Telegram</p></div>
+      <div class="stat"><div class="stat-n"><span class="count" data-count="2700">2,700</span><em>+</em></div><p><b>X followers</b> grown in just a few months</p></div>
+      <div class="stat"><div class="stat-n"><span class="count" data-count="800">800</span><em>+</em></div><p><b>Live listeners</b> on our very first X Space</p></div>
+      <div class="stat"><div class="stat-n"><span class="count" data-count="2600">2,600</span></div><p><b>Active members</b> in the largest Bittensor community on Telegram</p></div>
     </div>
 
-    <div class="team">
-      <article class="member" data-reveal>
-        <span class="m-n">01</span>
-        <h3>Alchemist</h3>
-        <p class="role">Founder</p>
-        <p>Leads amplification across communities, podcasts, articles and KOLs.</p>
-        <a href="https://x.com/SubnetSummerT" target="_blank" rel="noopener" class="ulink">@SubnetSummerT <b>↗</b></a>
-      </article>
-      <article class="member" data-reveal>
-        <span class="m-n">02</span>
-        <h3>Kawis</h3>
-        <p class="role">Head of Content</p>
-        <p>Leads content strategy, narrative building and written output across channels.</p>
-      </article>
-      <article class="member" data-reveal>
-        <span class="m-n">03</span>
-        <h3>Karis</h3>
-        <p class="role">Head of Design</p>
-        <p>Leads visual identity, design direction and creative execution.</p>
-      </article>
-    </div>
   </div>
 </section>
 
-<!-- ============ 04 WORK ============ -->
-<section class="sec" id="work" data-theme="dark" data-label="Our work">
-  <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">Selected work</span><span class="sec-note">Design and marketing for ecosystem clients</span></div>
+<!-- ============ WORK ============ -->
+<section class="sec" id="work">
   <div class="wrap">
     <div class="work-top">
-      <h2 class="title" data-split>Work —<br>Highlights</h2>
-      <p class="work-note" data-reveal>Open a client to see the posts we made for them.</p>
+      <div>
+        <p class="eyebrow" data-reveal>Selected work</p>
+        <h2 class="title" data-split>Work highlights</h2>
+      </div>
+      <p class="work-note" data-reveal>Design and marketing for premium Bittensor teams. Select a client to see the posts.</p>
     </div>
     <!-- Rendered from CLIENTS in main.js. Add post links there. -->
     <div class="work-grid" id="workGrid"></div>
   </div>
 </section>
 
-<!-- ============ 05 SERVICES ============ -->
-<section class="sec" id="services" data-theme="light" data-label="Services">
-  <div class="sec-head"><span class="sec-num">05</span><span class="sec-title">Services</span><span class="sec-note">Premium yearly full-service</span></div>
+<!-- ============ SERVICES ============ -->
+<section class="sec sec--light" id="services">
   <div class="wrap">
+    <p class="eyebrow" data-reveal>Services</p>
     <h2 class="statement" data-split>One partner. Full coverage. <span class="soft">We become your extended marketing arm, so you can stay on the build.</span></h2>
 
     <div class="flag">
@@ -181,22 +151,22 @@
         </div>
         <div class="price"><span class="price-n" id="priceN">150</span><span class="price-u">TAO<br><span id="priceP">per year</span></span></div>
         <p class="price-note" id="priceNote">Recommended. Priority execution across every service, and 30 TAO less than paying monthly.</p>
-        <a href="#contact" class="btn btn--solid">Lock in your package <b>↗</b></a>
+        <a href="#contact" class="btn btn--solid">Lock in your package</a>
         <p class="pay">Paid in TAO or subnet Alpha</p>
       </div>
       <div class="flag-r">
         <p class="eyebrow" data-reveal>What we run for you</p>
-        <ol class="scope">
-          <li data-reveal><span>01</span>Marketing execution and campaign planning</li>
-          <li data-reveal><span>02</span>Communications and narrative positioning</li>
-          <li data-reveal><span>03</span>Content strategy and design direction</li>
-          <li data-reveal><span>04</span>Articles, threads and written amplification</li>
-          <li data-reveal><span>05</span>X account management and daily engagement</li>
-          <li data-reveal><span>06</span>AMA coordination and hosting</li>
-          <li data-reveal><span>07</span>X Spaces planning, hosting and moderation</li>
-          <li data-reveal><span>08</span>Community engagement strategy</li>
-          <li data-reveal><span>09</span>Growth and ecosystem positioning advisory</li>
-        </ol>
+        <ul class="scope">
+          <li data-reveal>Marketing execution and campaign planning</li>
+          <li data-reveal>Communications and narrative positioning</li>
+          <li data-reveal>Content strategy and design direction</li>
+          <li data-reveal>Articles, threads and written amplification</li>
+          <li data-reveal>X account management and daily engagement</li>
+          <li data-reveal>AMA coordination and hosting</li>
+          <li data-reveal>X Spaces planning, hosting and moderation</li>
+          <li data-reveal>Community engagement strategy</li>
+          <li data-reveal>Growth and ecosystem positioning advisory</li>
+        </ul>
       </div>
     </div>
 
@@ -213,65 +183,68 @@
         <p data-reveal>Stack any combination on top of Premium. Same team, and you pay only for what you need.</p>
       </div>
       <ul class="menu">
-        <li data-reveal><div class="menu-row"><h4>Brand &amp; Design</h4><i></i><span class="menu-p">5 TAO<small>/ month</small></span></div><p>Banners, profile assets, pitch deck visuals and brand guidelines, beyond post graphics.</p></li>
-        <li data-reveal><div class="menu-row"><h4>Content Amplification</h4><i></i><span class="menu-p">5 TAO<small>/ month</small></span></div><p>A weekly quote-tweet or standalone post about your content from our account.</p></li>
-        <li data-reveal><div class="menu-row"><h4>Community Management</h4><i></i><span class="menu-p">4 TAO<small>/ month</small></span></div><p>Telegram community set up from scratch, then moderated, engaged and grown.</p></li>
-        <li data-reveal><div class="menu-row"><h4>Video Production</h4><i></i><span class="menu-p">4 TAO<small>/ video</small></span></div><p>Production-grade video to amplify your subnet.</p></li>
-        <li data-reveal><div class="menu-row"><h4>Subnet Summer AMA</h4><i></i><span class="menu-p">3 TAO<small>/ AMA</small></span></div><p>An AMA with our 2,600-member community, recorded and published to YouTube.</p></li>
-        <li data-reveal><div class="menu-row"><h4>Subnet Summer Posts</h4><i></i><span class="menu-p">0.5 TAO<small>/ post</small></span></div><p>Subnet-focused posts from the Subnet Summer X channel.</p></li>
-        <li data-reveal><div class="menu-row"><h4>Website Design</h4><i></i><span class="menu-p">Custom<small>quote</small></span></div><p>Full website design for your subnet.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Brand &amp; Design</h4><span class="menu-p">5 TAO<small>/ month</small></span></div><p>Banners, profile assets, pitch deck visuals and brand guidelines, beyond post graphics.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Content Amplification</h4><span class="menu-p">5 TAO<small>/ month</small></span></div><p>A weekly quote-tweet or standalone post about your content from our account.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Community Management</h4><span class="menu-p">4 TAO<small>/ month</small></span></div><p>Telegram community set up from scratch, then moderated, engaged and grown.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Video Production</h4><span class="menu-p">4 TAO<small>/ video</small></span></div><p>Production-grade video to amplify your subnet.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Subnet Summer AMA</h4><span class="menu-p">3 TAO<small>/ AMA</small></span></div><p>An AMA with our 2,600-member community, recorded and published to YouTube.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Subnet Summer Posts</h4><span class="menu-p">0.5 TAO<small>/ post</small></span></div><p>Subnet-focused posts from the Subnet Summer X channel.</p></li>
+        <li data-reveal><div class="menu-row"><h4>Website Design</h4><span class="menu-p">Custom<small>quote</small></span></div><p>Full website design for your subnet.</p></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- ============ 06 TESTIMONIALS ============ -->
-<section class="sec" id="testimonials" data-theme="dark" data-label="Testimonials">
-  <div class="sec-head"><span class="sec-num">06</span><span class="sec-title">Testimonials</span><span class="sec-note">In their words</span></div>
+<!-- ============ TESTIMONIALS ============ -->
+<section class="sec" id="testimonials">
   <div class="wrap">
+    <p class="eyebrow" data-reveal>Testimonials</p>
+    <h2 class="title" data-split>In their words</h2>
     <!-- Rendered from TESTIMONIALS in main.js. Replace the placeholders there. -->
     <div class="quotes" id="quotes"></div>
   </div>
 </section>
 
-<!-- ============ 07 CONTACT ============ -->
-<section class="sec" id="contact" data-theme="light" data-label="Next step">
-  <div class="sec-head"><span class="sec-num">07</span><span class="sec-title">Next step</span><span class="sec-note">Contact us</span></div>
+<!-- ============ CONTACT ============ -->
+<section class="sec" id="contact">
   <div class="wrap">
+    <p class="eyebrow" data-reveal>Contact us</p>
     <h2 class="display display--xl" data-split>Your subnet deserves to <em>be seen.</em></h2>
     <div class="cta">
       <p class="cta-copy" data-reveal>Let's build your visibility before someone else takes the mindshare.</p>
       <div class="cta-btns" data-reveal>
-        <a class="btn btn--solid btn--lg" href="mailto:subnetsummer@gmail.com?subject=Lock%20in%20my%20Subnet%20Summer%20package">Lock in your package <b>↗</b></a>
-        <a class="btn btn--line btn--lg" href="https://x.com/SubnetSummerT" target="_blank" rel="noopener">DM @SubnetSummerT <b>↗</b></a>
+        <a class="btn btn--solid btn--lg" href="mailto:subnetsummer@gmail.com?subject=Lock%20in%20my%20Subnet%20Summer%20package">Lock in your package</a>
+        <a class="btn btn--line btn--lg" href="https://x.com/SubnetSummerT" target="_blank" rel="noopener">DM @SubnetSummerT</a>
       </div>
     </div>
 
-    <ol class="timeline">
-      <li data-reveal><i class="tl-dot"></i><span class="tl-n">01</span><h4>Agreement</h4><p>We send over the signed service agreement.</p></li>
-      <li data-reveal><i class="tl-dot"></i><span class="tl-n">02</span><h4>Payment</h4><p>Wallet instructions for TAO or subnet Alpha.</p></li>
-      <li data-reveal><i class="tl-dot"></i><span class="tl-n">03</span><h4>Kickoff</h4><p>Onboarding plan, with access live inside 24 hours.</p></li>
-    </ol>
+    <div class="steps" data-reveal>
+      <p class="eyebrow" data-reveal>How we start</p>
+      <div class="steps-row">
+        <div class="step" data-reveal><i></i><h4>Agreement</h4><p>We send over the signed service agreement.</p></div>
+        <div class="step" data-reveal><i></i><h4>Payment</h4><p>Wallet instructions for TAO or subnet Alpha.</p></div>
+        <div class="step" data-reveal><i></i><h4>Kickoff</h4><p>Onboarding plan, with access live inside 24 hours.</p></div>
+      </div>
+    </div>
 
     <div class="links">
-      <a href="mailto:subnetsummer@gmail.com" class="big-link" data-reveal><span class="bl-k">Email</span><span class="bl-v">subnetsummer@gmail.com <b>↗</b></span></a>
-      <a href="https://x.com/SubnetSummerT" target="_blank" rel="noopener" class="big-link" data-reveal><span class="bl-k">X / Twitter</span><span class="bl-v">@SubnetSummerT <b>↗</b></span></a>
-      <div class="big-link" data-reveal><span class="bl-k">Telegram</span><span class="bl-v">2,600-member community</span></div>
+      <a href="mailto:subnetsummer@gmail.com" class="big-link" data-reveal><span class="bl-k">Email</span><span class="bl-v">subnetsummer@gmail.com</span></a>
+      <a href="https://x.com/SubnetSummerT" target="_blank" rel="noopener" class="big-link" data-reveal><span class="bl-k">X / Twitter</span><span class="bl-v">@SubnetSummerT</span></a>
+      <a href="https://t.me/subnetsummertg" target="_blank" rel="noopener" class="big-link" data-reveal><span class="bl-k">Telegram</span><span class="bl-v">t.me/subnetsummertg</span></a>
     </div>
   </div>
 </section>
 
 <!-- ============ FOOTER ============ -->
-<section class="sec footer" id="footer" data-theme="dark" data-label="Subnet Summer">
-  <div class="sec-head sec-head--bare"></div>
+<footer class="footer">
   <div class="wrap">
     <svg class="ss-logo ss-logo--giant" viewBox="0 0 423.463 46.9741" role="img" aria-label="Subnet Summer"><use href="#ss-wordmark"/></svg>
+    <div class="foot-row">
+      <span>Marketing and growth for Bittensor subnets</span>
+      <span>©2026 Subnet Summer</span>
+    </div>
   </div>
-  <div class="foot-row">
-    <span>Marketing and growth for Bittensor subnets</span>
-    <span>©2026 Subnet Summer</span>
-  </div>
-</section>
+</footer>
 
 </main>
 
@@ -281,16 +254,16 @@
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-head">
       <div>
-        <p class="eyebrow" id="modalIdx">Client</p>
+        <img id="modalLogo" alt="" class="modal-logo" src="assets/logos/404gen.png">
         <h3 id="modalTitle">Client</h3>
         <p id="modalTags" class="modal-tags"></p>
       </div>
-      <button class="modal-x" data-close aria-label="Close">✕</button>
+      <button class="modal-x" data-close aria-label="Close"><span></span><span></span></button>
     </div>
     <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
-<script src="main.js"></script>
+<script src="main.js?v=8"></script>
 </body>
 </html>
