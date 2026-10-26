@@ -1,5 +1,5 @@
 /* =========================================================
-   Subnet Summer — site behaviour (v2)
+   Subnet Summer — site behaviour (v3)
    ========================================================= */
 document.documentElement.classList.add('js');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -7,21 +7,24 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ---------------------------------------------------------
    CONTENT YOU EDIT
    posts: add links, e.g. 'https://x.com/SubnetSummerT/status/123...'
-   X/Twitter links render as embedded posts; other links render as link cards.
-   logo: white-on-transparent mark in /assets (null = name only).
+   X/Twitter links embed as posts; other links render as link cards.
+   ratio = logo width / height (keeps every logo at an even visual weight).
    --------------------------------------------------------- */
 const CLIENTS = [
-  { name: '404-GEN',  logo: 'assets/logo-404gen.png',   wide: true, tags: ['Visuals', 'Branding', 'Creative'], variant: 'dark',  size: 'lg', posts: [] },
-  { name: 'Trishool', logo: 'assets/logo-trishool.svg',             tags: ['Visuals', 'Branding', 'Creative'], variant: 'light', size: 'lg', posts: [] },
-  { name: 'Verathos', logo: null,                                   tags: ['Visuals', 'Branding', 'Creative'], variant: 'light',             posts: [] },
-  { name: 'Numinous', logo: 'assets/logo-numinous.png',             tags: ['Visuals', 'Branding', 'Creative'], variant: 'dark',              posts: [] },
-  { name: 'NIOME',    logo: 'assets/logo-niome.png',                tags: ['Visuals', 'Branding', 'Creative'], variant: 'light',             posts: [] },
+  { name: '404-GEN',         logo: 'assets/logos/404gen.png',   ratio: 5.409, size: 'lg', posts: [] },
+  { name: 'Trishool',        logo: 'assets/logos/trishool.svg', ratio: 8.729, size: 'lg', posts: [] },
+  { name: 'Verathos',        logo: 'assets/logos/verathos.png', ratio: 3.712,             posts: [] },
+  { name: 'Numinous',        logo: 'assets/logos/numinous.png', ratio: 5.702,             posts: [] },
+  { name: 'NIOME',           logo: 'assets/logos/niome.png',    ratio: 1,                 posts: [] },
+  { name: 'Minotaur',        logo: 'assets/logos/minotaur.svg', ratio: 5.305, size: 'lg', posts: [] },
+  { name: 'Nepher Robotics', logo: 'assets/logos/nepher.svg',   ratio: 7.334, size: 'lg', posts: [] },
 ];
+const TAGS = 'Visuals · Branding · Creative';
 
 const TESTIMONIALS = [
-  { quote: 'Client testimonial goes here. One or two lines on how Subnet Summer changed their visibility.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
-  { quote: 'Second testimonial placeholder. A short line on community growth, Spaces or campaign results.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
-  { quote: 'Third testimonial placeholder. Keep it to a sentence or two so the three cards stay balanced.', name: 'Client name', role: 'Role · Subnet', placeholder: true },
+  { quote: 'Client testimonial goes here. One or two lines on how Subnet Summer changed their visibility.', name: 'Client name', role: 'Role, Subnet', placeholder: true },
+  { quote: 'Second testimonial placeholder. A short line on community growth, Spaces or campaign results.', name: 'Client name', role: 'Role, Subnet', placeholder: true },
+  { quote: 'Third testimonial placeholder. Keep it to a sentence or two so the three quotes stay balanced.', name: 'Client name', role: 'Role, Subnet', placeholder: true },
 ];
 
 /* ---------- helpers ---------- */
@@ -30,17 +33,18 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const pad = n => String(n).padStart(2, '0');
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const logoImg = (c, cls = '') => c.logo ? `<img src="${c.logo}" alt="" class="${[c.wide ? 'wide' : '', cls].join(' ').trim()}">` : '';
+const logoH = (r, base) => Math.min(base * 0.78, Math.round(base / Math.sqrt(r)));   // equal optical area
 
 /* =========================================================
-   CLIENT LOGO MARQUEE (moves left → right, loops)
+   CLIENT LOGO STRIP (in brand colours, moving left → right)
    ========================================================= */
-(function buildMarquee() {
+(function buildStrip() {
   const track = $('#logoTrack');
-  const set = CLIENTS.map(c => `<div class="logo-item">${logoImg(c)}<span>${esc(c.name)}</span></div><i class="logo-sep"></i>`).join('');
-  const half = set + set;             // one half wide enough for large screens
-  track.innerHTML = half + half;      // two identical halves → seamless loop
-  $$('.logo-item', track).slice(CLIENTS.length * 2).forEach(el => el.setAttribute('aria-hidden', 'true'));
+  const small = innerWidth < 760;
+  const base = small ? 62 : 84;
+  const set = CLIENTS.map(c => `<img src="${c.logo}" alt="${esc(c.name)}" style="--h:${logoH(c.ratio, base)}px">`).join('');
+  track.innerHTML = set + set + set + set;          // two identical halves → seamless loop
+  $$('img', track).slice(CLIENTS.length).forEach(i => { i.alt = ''; i.setAttribute('aria-hidden', 'true'); });
 })();
 
 /* =========================================================
@@ -49,20 +53,19 @@ const logoImg = (c, cls = '') => c.logo ? `<img src="${c.logo}" alt="" class="${
 const grid = $('#workGrid');
 CLIENTS.forEach((c, i) => {
   const n = c.posts.length;
-  const tile = `<div class="ptile"><div class="pt-head"><span class="pt-av"></span><span class="pt-lines"><i></i><i></i></span></div><div class="pt-media">${n ? '' : 'Post soon'}</div><div class="pt-text"><i></i><i></i></div></div>`;
   const card = document.createElement('article');
-  card.className = `wcard wcard--${c.variant}${c.size === 'lg' ? ' wcard--lg' : ''}`;
+  card.className = `wcard${c.size === 'lg' ? ' wcard--lg' : ''}`;
   card.tabIndex = 0;
   card.setAttribute('role', 'button');
   card.setAttribute('aria-label', `Open ${c.name} work`);
   card.dataset.reveal = '';
   card.innerHTML = `
     <div class="wmedia">
-      <div class="wmeta"><span>${pad(i + 1)} / ${pad(CLIENTS.length)}</span><span>${n ? `${n} post${n > 1 ? 's' : ''}` : 'Posts coming soon'}</span></div>
-      <div class="wlogo">${logoImg(c)}<span class="wname">${esc(c.name)}</span></div>
-      <div class="wtiles">${tile}${tile}${tile}</div>
+      <i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i>
+      <div class="wmeta"><span>${pad(i + 1)}</span><span>${n ? `${n} post${n > 1 ? 's' : ''}` : 'Posts coming soon'}</span></div>
+      <img src="${c.logo}" alt="${esc(c.name)} logo" style="--wh:${logoH(c.ratio, c.size === 'lg' ? 150 : 118)}px">
     </div>
-    <div class="winfo"><h3>${esc(c.name)}</h3><p>${c.tags.map(esc).join(' / ')}</p><span class="wlink">View posts ↗</span></div>`;
+    <div class="winfo"><h3>${esc(c.name)}</h3><p>${TAGS}</p><span class="wlink">View posts <b>↗</b></span></div>`;
   card.addEventListener('click', () => openModal(i));
   card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(i); } });
   grid.appendChild(card);
@@ -73,12 +76,7 @@ const modal = $('#modal');
 let lastFocus = null, twttrLoading = false;
 function loadTwitter(cb) {
   if (window.twttr && window.twttr.widgets) return cb();
-  if (!twttrLoading) {
-    twttrLoading = true;
-    const s = document.createElement('script');
-    s.src = 'https://platform.twitter.com/widgets.js'; s.async = true;
-    document.body.appendChild(s);
-  }
+  if (!twttrLoading) { twttrLoading = true; const s = document.createElement('script'); s.src = 'https://platform.twitter.com/widgets.js'; s.async = true; document.body.appendChild(s); }
   const t = setInterval(() => { if (window.twttr && window.twttr.widgets) { clearInterval(t); cb(); } }, 120);
 }
 function openModal(i) {
@@ -86,11 +84,11 @@ function openModal(i) {
   lastFocus = document.activeElement;
   $('#modalIdx').textContent = `Client ${pad(i + 1)} / ${pad(CLIENTS.length)}`;
   $('#modalTitle').textContent = c.name;
-  $('#modalTags').textContent = c.tags.join(' / ');
+  $('#modalTags').textContent = TAGS;
   const body = $('#modalBody');
   if (!c.posts.length) {
     body.innerHTML = Array.from({ length: 6 }, (_, k) =>
-      `<div class="slot"><span>Post ${pad(k + 1)}</span><b>Post preview<br>coming soon</b><span>Placeholder</span></div>`).join('');
+      `<div class="slot"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><span>Post ${pad(k + 1)}</span><b>Post preview<br>coming soon</b></div>`).join('');
   } else {
     const isX = u => /^https?:\/\/(www\.)?(x|twitter)\.com\/.+\/status\//i.test(u);
     body.innerHTML = c.posts.map((u, k) => isX(u)
@@ -106,49 +104,71 @@ function openModal(i) {
 function closeModal() {
   modal.classList.remove('open');
   document.body.style.overflow = '';
-  setTimeout(() => { modal.hidden = true; lastFocus && lastFocus.focus(); }, 620);
+  setTimeout(() => { modal.hidden = true; lastFocus && lastFocus.focus(); }, 800);
 }
 modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal(); });
 
 /* =========================================================
-   TESTIMONIALS — all three in one row
+   TESTIMONIALS
    ========================================================= */
 const QMARK = '<svg class="qmark" viewBox="0 0 120 90" aria-hidden="true"><path d="M0 90V52C0 22 15 5 45 0l5 12C33 17 26 28 25 42h22v48H0Zm68 0V52C68 22 83 5 113 0l5 12c-17 5-24 16-25 30h22v48H68Z"/></svg>';
-$('#tGrid').innerHTML = TESTIMONIALS.map(t => `
-  <figure class="t-card" data-reveal>
-    <div>${QMARK}<blockquote>${esc(t.quote)}</blockquote></div>
-    <figcaption class="who">
-      <span class="who-av">${esc(t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase())}</span>
-      <div><b>${esc(t.name)}${t.placeholder ? '<span class="ph-pill">Placeholder</span>' : ''}</b><span class="who-role">${esc(t.role)}</span></div>
+$('#quotes').innerHTML = TESTIMONIALS.map(t => `
+  <figure class="quote" data-reveal>
+    ${QMARK}
+    <blockquote>${esc(t.quote)}</blockquote>
+    <figcaption>
+      <span class="q-av">${esc(t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase())}</span>
+      <span><b>${esc(t.name)}${t.placeholder ? '<span class="q-ph">Placeholder</span>' : ''}</b><span class="q-role">${esc(t.role)}</span></span>
     </figcaption>
   </figure>`).join('');
 
 /* =========================================================
-   BILLING TOGGLE
+   BILLING
    ========================================================= */
 const BILL = {
-  year:  { n: '150', p: '/ year',  note: 'Priority execution across every service. Saves 30 TAO against monthly.' },
-  month: { n: '15',  p: '/ month', note: 'Flexible, rolling month to month. Switch to yearly any time.' },
+  year:  { n: '150', p: 'per year',  note: 'Recommended. Priority execution across every service, and 30 TAO less than paying monthly.' },
+  month: { n: '15',  p: 'per month', note: 'Flexible, rolling month to month. Switch to yearly at any time.' },
 };
 $$('.billing button').forEach(b => b.addEventListener('click', () => {
   if (b.getAttribute('aria-selected') === 'true') return;
   $$('.billing button').forEach(x => x.setAttribute('aria-selected', x === b));
   const d = BILL[b.dataset.bill], n = $('#priceN');
   n.classList.add('swap');
-  setTimeout(() => { n.textContent = d.n; $('#priceP').textContent = d.p; $('#priceNote').textContent = d.note; n.classList.remove('swap'); }, 240);
+  setTimeout(() => { n.textContent = d.n; $('#priceP').textContent = d.p; $('#priceNote').textContent = d.note; n.classList.remove('swap'); }, 260);
 }));
 
 /* =========================================================
-   REVEAL + COUNTERS
+   SPLIT-WORD HEADINGS + REVEALS + COUNTERS
    ========================================================= */
+function splitWords(el) {
+  let k = 0;
+  const walk = node => {
+    [...node.childNodes].forEach(ch => {
+      if (ch.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        ch.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+          const w = document.createElement('span'); w.className = 'w';
+          const s = document.createElement('span'); s.textContent = part; s.style.setProperty('--d', `${(k++ * 0.045).toFixed(3)}s`);
+          w.appendChild(s); frag.appendChild(w);
+        });
+        ch.replaceWith(frag);
+      } else if (ch.nodeType === 1 && ch.tagName !== 'BR') walk(ch);
+    });
+  };
+  walk(el);
+}
+$$('[data-split]').forEach(splitWords);
+
 const groups = new Map();
 $$('[data-reveal]').forEach(el => {
   const p = el.parentElement, k = groups.get(p) || 0;
   groups.set(p, k + 1);
-  el.style.transitionDelay = `${Math.min(k, 6) * 80}ms`;
+  el.style.transitionDelay = `${Math.min(k, 8) * 90}ms`;
 });
 function countUp(el) {
-  const to = +el.dataset.count, t0 = performance.now(), dur = 1800;
+  const to = +el.dataset.count, t0 = performance.now(), dur = 2000;
   const step = t => {
     const p = clamp((t - t0) / dur), e = 1 - Math.pow(1 - p, 4);
     el.textContent = Math.round(to * e).toLocaleString('en-US');
@@ -161,21 +181,21 @@ const io = new IntersectionObserver(entries => entries.forEach(en => {
   en.target.classList.add('in');
   if (!reduce) $$('[data-count]', en.target).forEach(countUp);
   io.unobserve(en.target);
-}), { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
-$$('[data-reveal]').forEach(el => io.observe(el));
+}), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+$$('[data-reveal], [data-split]:not(.hero-h)').forEach(el => io.observe(el));
 
 /* =========================================================
-   HERO — skyline line (from the Figma cover's stepped bars)
+   HERO — stepped skyline from the Figma cover
    ========================================================= */
 const hero = $('#hero'), sky = $('#skyline');
-// Top-segment heights of the 16 columns on the Figma "Slide1" cover (of 1080).
 const STEPS = [675, 270, 945, 135, 810, 540, 476.7, 405, 160.9, 540, 810, 270, 675, 945, 405, 381.8];
 let skyPath = null, skyDot = null, skyLen = 0;
 function drawSkyline(animate) {
   const W = hero.clientWidth, H = hero.clientHeight;
-  const headTop = $('.hero-h').getBoundingClientRect().top - hero.getBoundingClientRect().top;
-  const top = Math.max(118, H * 0.17);
-  const span = Math.max(60, Math.min(H * 0.34, headTop - top - 36));
+  const hr = hero.getBoundingClientRect();
+  const headTop = $('.hero-h').getBoundingClientRect().top - hr.top;
+  const top = $('.nav').offsetHeight + Math.max(28, H * 0.05);
+  const span = Math.max(50, Math.min(H * 0.36, headTop - top - 40));
   const cw = W / STEPS.length;
   let d = '';
   STEPS.forEach((h, i) => {
@@ -183,92 +203,66 @@ function drawSkyline(animate) {
     d += i === 0 ? `M0 ${y} H${cw.toFixed(1)}` : ` V${y} H${((i + 1) * cw).toFixed(1)}`;
   });
   sky.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  sky.innerHTML = `<path d="${d}"/><circle class="dot" r="4"/>`;
-  skyPath = $('path', sky); skyDot = $('.dot', sky);
-  skyLen = skyPath.getTotalLength();
+  sky.innerHTML = `<path d="${d}"/><circle r="4" cx="-10" cy="-10"/>`;
+  skyPath = $('path', sky); skyDot = $('circle', sky); skyLen = skyPath.getTotalLength();
   if (animate && !reduce) {
-    skyPath.style.strokeDasharray = skyLen;
-    skyPath.style.strokeDashoffset = skyLen;
+    skyPath.style.strokeDasharray = skyLen; skyPath.style.strokeDashoffset = skyLen;
     skyPath.getBoundingClientRect();
-    skyPath.style.transition = 'stroke-dashoffset 2.6s cubic-bezier(.22,.61,.36,1)';
+    skyPath.style.transition = 'stroke-dashoffset 2.8s cubic-bezier(.22,.61,.36,1) .3s';
     skyPath.style.strokeDashoffset = 0;
   }
 }
-let heroVisible = true, dotT0 = performance.now();
+let heroVisible = true, dotT0 = 0, dotOn = false;
 new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(hero);
 function dotLoop(t) {
-  if (heroVisible && skyPath && skyLen) {
-    const p = ((t - dotT0) / 14000) % 1;          // one slow pass every 14s
-    const pt = skyPath.getPointAtLength(p * skyLen);
+  if (heroVisible && skyLen) {
+    const pt = skyPath.getPointAtLength((((t - dotT0) / 16000) % 1) * skyLen);
     skyDot.setAttribute('cx', pt.x); skyDot.setAttribute('cy', pt.y);
   }
   requestAnimationFrame(dotLoop);
 }
-
-if (!reduce) hero.classList.add('pre');
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => {
   drawSkyline(true);
-  requestAnimationFrame(() => hero.classList.remove('pre'));
-  if (!reduce) setTimeout(() => { dotT0 = performance.now(); requestAnimationFrame(dotLoop); }, 2600);
+  requestAnimationFrame(() => $('.hero-h').classList.add('in'));
+  if (!reduce && !dotOn) { dotOn = true; setTimeout(() => { dotT0 = performance.now(); requestAnimationFrame(dotLoop); }, 3100); }
 });
 
 /* =========================================================
-   NAV / HUD THEME + DECK NAVIGATION
+   THEME FLOW (black ↔ white crossfade) + HUD + DECK KEYS
    ========================================================= */
-const nav = $('#nav'), hud = $('#hud');
+const root = document.documentElement, hud = $('#hud');
 const sections = $$('main > section');
-$('#hudTotal').textContent = pad(sections.length);
-
-function themeAt(y) {
-  let theme = 'dark';
-  for (const s of sections) {
-    const r = s.getBoundingClientRect();
-    if (r.top <= y && r.bottom > y) theme = s.dataset.theme;
-  }
-  return theme;
-}
-function currentIndex() {
-  const mark = innerHeight * 0.45;
+$('#hudTotal').textContent = pad(sections.length - 1);
+function sectionAt(y) {
   let idx = 0;
-  sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= mark) idx = i; });
+  sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= y) idx = i; });
   return idx;
 }
 let ticking = false;
 function onScroll() {
   ticking = false;
-  nav.classList.toggle('is-scrolled', scrollY > 30);
-  nav.dataset.theme = themeAt(38);
-  hud.dataset.theme = themeAt(innerHeight - 30);
-  const i = currentIndex();
+  const max = root.scrollHeight - innerHeight;
+  const themeIdx = scrollY >= max - 4 ? sections.length - 1 : sectionAt(innerHeight * 0.52);
+  const t = sections[themeIdx].dataset.theme;
+  if (root.dataset.theme !== t) root.dataset.theme = t;
+  const i = Math.min(sectionAt(innerHeight * 0.45), sections.length - 2);
   $('#hudNum').textContent = pad(i + 1);
   $('#hudLabel').textContent = sections[i].dataset.label;
-  const max = document.documentElement.scrollHeight - innerHeight;
   $('#hudBar').style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
-  hud.classList.toggle('is-hidden', scrollY > max - 260);
-  $('.hud-hint').style.display = i === 0 ? '' : 'none';
+  hud.classList.toggle('is-hidden', i === 0 || scrollY > max - 320);
 }
 addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
 let rz;
-addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawSkyline(false); onScroll(); }, 120); });
+addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawSkyline(false); onScroll(); }, 140); });
 
 function goTo(i) {
   i = clamp(i, 0, sections.length - 1);
-  scrollTo({ top: sections[i].offsetTop, behavior: reduce ? 'auto' : 'smooth' });
+  scrollTo({ top: sections[i].offsetTop - (i ? 72 : 0), behavior: reduce ? 'auto' : 'smooth' });
 }
 addEventListener('keydown', e => {
   if (!modal.hidden) { if (e.key === 'Escape') closeModal(); return; }
   if (e.target.closest('input, textarea, [contenteditable]') || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.key === 'ArrowRight') { e.preventDefault(); goTo(currentIndex() + 1); }
-  if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(currentIndex() - 1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); goTo(sectionAt(innerHeight * 0.3) + 1); }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(sectionAt(innerHeight * 0.3) - 1); }
 });
-
-/* ---------- mobile menu ---------- */
-const burger = $('#burger'), menu = $('#menu');
-burger.addEventListener('click', () => {
-  const open = burger.getAttribute('aria-expanded') !== 'true';
-  burger.setAttribute('aria-expanded', open);
-  menu.hidden = !open;
-});
-$$('a', menu).forEach(a => a.addEventListener('click', () => { burger.setAttribute('aria-expanded', 'false'); menu.hidden = true; }));
-
 onScroll();
